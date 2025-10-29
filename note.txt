@@ -1,0 +1,11 @@
+| Block       | Purpose                                     |
+| ----------- | ------------------------------------------- |
+| `terraform` | Global settings, provider versions, backend |
+| `provider`  | Cloud/service connection setup              |
+| `variable`  | Input variables                             |
+| `resource`  | Actual infra objects                        |
+| `output`    | Display values after apply                  |
+| `locals`    | Local computed constants                    |
+| `data`      | Fetch existing resources                    |
+| `module`    | Reusable Terraform components               |
+| `dynamic`   | Conditional / loop-based nested blocks      |
