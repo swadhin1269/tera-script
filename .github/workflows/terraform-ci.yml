@@ -35,6 +35,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Package Lambda code
+        run: |
+          cd infra
+          echo 'def handler(event, context):' > index.py
+          echo '    print("Lambda triggered by S3")' >> index.py
+          echo '    return {"statusCode": 200, "body": "OK"}' >> index.py
+          zip lambda_payload.zip index.py
+          ls -l
+
       - name: Terraform Init
         run: terraform -chdir=infra init
 
