@@ -46,7 +46,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "process_bucket_lifecycle" {
 
 # S3 notification → Lambda trigger
 resource "aws_s3_bucket_notification" "lambda_trigger" {
-  bucket = aws_s3_bucket.trigger_bucket.id
+  bucket = aws_s3_bucket.process_bucket.id
 
   lambda_function {
     lambda_function_arn = aws_lambda_function.processor.arn
