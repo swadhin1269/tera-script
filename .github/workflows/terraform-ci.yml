@@ -36,14 +36,14 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform -chdir=infra init
 
       - name: Terraform Validate
-        run: terraform validate
+        run: terraform -chdir=infra validate
 
       - name: Terraform Plan (for feature branches)
         if: startsWith(github.ref, 'refs/heads/feature/')
-        run: terraform plan -out=tfplan
+        run: terraform -chdir=infra plan -out=tfplan
 
       - name: Upload Plan (for feature branches)
         if: startsWith(github.ref, 'refs/heads/feature/')
@@ -52,8 +52,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan
-          path: tfplan
+          path: infra/tfplan
 
       - name: Terraform Apply (only on master)
         if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve tfplan
+        run: terraform -chdir=infra apply -auto-approve tfplan
