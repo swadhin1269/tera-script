@@ -41,13 +41,17 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
+      - name: Terraform Plan (for feature branches)
+        if: startsWith(github.ref, 'refs/heads/feature/')
+        run: terraform plan -out=tfplan
+
       - name: Upload Plan (for feature branches)
         if: startsWith(github.ref, 'refs/heads/feature/')
         # GitHub Actions me data save / share karne ka mechanism - pre-build GitAction
         # actions/download-artifact@v4 = GitHub storage se file wapas lana (next job me use karne ke liye) - pre-build GitAction
         uses: actions/upload-artifact@v4
         with:
-          name: terraform plan -out=tfplan
+          name: terraform-plan
           path: tfplan
 
       - name: Terraform Apply (only on master)
