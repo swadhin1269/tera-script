@@ -47,7 +47,7 @@ jobs:
         # actions/download-artifact@v4 = GitHub storage se file wapas lana (next job me use karne ke liye) - pre-build GitAction
         uses: actions/upload-artifact@v4
         with:
-          name: terraform-plan
+          name: terraform plan -out=tfplan
           path: tfplan
 
       - name: Terraform Apply (only on master)
