@@ -43,3 +43,18 @@ resource "aws_s3_bucket_lifecycle_configuration" "process_bucket_lifecycle" {
     }
   }
 }
+
+# S3 notification → Lambda trigger
+resource "aws_s3_bucket_notification" "lambda_trigger" {
+  bucket = aws_s3_bucket.trigger_bucket.id
+
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.processor.arn
+    events              = ["s3:ObjectCreated:*"]
+  }
+
+  depends_on = [
+    aws_lambda_function.processor,
+    aws_lambda_permission.allow_s3
+  ]
+}
