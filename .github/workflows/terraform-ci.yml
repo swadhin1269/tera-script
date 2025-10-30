@@ -8,7 +8,7 @@ on:
       - feature/**
 
 jobs:
-  setup-environment:
+  ci:
     runs-on: ubuntu-latest
 
     steps:
