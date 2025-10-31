@@ -55,7 +55,7 @@ resource "aws_security_group" "ssh" {
 # ---------- Key Pair ----------
 resource "aws_key_pair" "mykey" {
   key_name   = "my-keypair"
-  public_key = file("~/.ssh/id_rsa.pub")
+  public_key = file("${pathexpand("~/.ssh/id_rsa.pub")}")
 }
 
 # ---------- EC2 Instance ----------
