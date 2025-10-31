@@ -1,0 +1,68 @@
+name: aws upload-sys CI/CD file
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - feature/**
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        # Clone the repo code into Runner - pre-build GitAction
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        # Install teraform into the Runner - pre-build GitAction
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.5
+
+      - name: Check Versions
+        run: |
+          terraform -version
+
+      - name: Configure AWS credentials
+        # Ye AWS CLI environment configure karega using your GitHub secrets.
+        # Terraform ab AWS ke resources access kar sakta hai (S3, EC2, etc.).
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Package Lambda code
+        run: |
+          cd infra
+          echo 'def handler(event, context):' > index.py
+          echo '    print("Lambda triggered by S3")' >> index.py
+          echo '    return {"statusCode": 200, "body": "OK"}' >> index.py
+          zip lambda_payload.zip index.py
+          ls -l
+
+      - name: Terraform Init
+        run: terraform -chdir=infra init
+
+      - name: Terraform Validate
+        run: terraform -chdir=infra validate
+
+      - name: Terraform Plan (for feature branches)
+        if: startsWith(github.ref, 'refs/heads/feature/')
+        run: terraform -chdir=infra plan -out=tfplan
+
+      - name: Upload Plan (for feature branches)
+        if: startsWith(github.ref, 'refs/heads/feature/')
+        # GitHub Actions me data save / share karne ka mechanism - pre-build GitAction
+        # actions/download-artifact@v4 = GitHub storage se file wapas lana (next job me use karne ke liye) - pre-build GitAction
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan
+          path: infra/tfplan
+
+      - name: Terraform Apply (only on master)
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+        run: terraform -chdir=infra apply -auto-approve tfplan

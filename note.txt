@@ -1,0 +1,30 @@
+| Block       | Purpose                                     |
+| ----------- | ------------------------------------------- |
+| `terraform` | Global settings, provider versions, backend |
+| `provider`  | Cloud/service connection setup              |
+| `variable`  | Input variables                             |
+| `resource`  | Actual infra objects                        |
+| `output`    | Display values after apply                  |
+| `locals`    | Local computed constants                    |
+| `data`      | Fetch existing resources                    |
+| `module`    | Reusable Terraform components               |
+| `dynamic`   | Conditional / loop-based nested blocks      |
+
+terraform init
+terraform plan / terraform plan -out=tfplan
+terraform apply / terraform apply tfplan
+terraform destroy
+
+| Inside `filter` | Description                              | Example                              |
+| --------------- | ---------------------------------------- | ------------------------------------ |
+| `prefix`        | Match folder/path                        | `prefix = "backup/"`                 |
+| `tag`           | Match single tag                         | `tag { key = "type" value = "log" }` |
+| `and`           | Combine multiple filters (prefix + tags) | See combined example above           |
+| *(empty)*       | Apply to all objects                     | `filter {}`                          |
+
+| Step | Command                                      | Purpose                |
+| ---- | -------------------------------------------- | ---------------------- |
+| 1    | `git checkout feature/teradev-s3`            | Switch to your branch  |
+| 2    | `git reset --hard HEAD~3`                    | Delete last 3 commits  |
+| 3    | `git add .gitignore && git commit`           | Recommit clean ignores |
+| 4    | `git push origin feature/teradev-s3 --force` | Push clean branch      |
