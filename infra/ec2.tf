@@ -45,6 +45,11 @@ resource "aws_security_group" "ssh" {
 }
 
 # EC2 instance
+resource "aws_key_pair" "mykey" {
+  key_name   = "my-keypair"
+  public_key = file("~/.ssh/id_rsa.pub")
+}
+
 resource "aws_instance" "web" {
   ami                         = data.aws_ami.amazon_linux_2.id
   instance_type               = var.instance_type
