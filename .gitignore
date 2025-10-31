@@ -1,3 +1,7 @@
+# Ignore specific Terraform files
+terraform_infra/infra/lambda.tf
+terraform_infra/infra/s3_bucket.tf
+
 # Terraform local files
 .terraform.lock.hcl
 *.tfstate.backup
