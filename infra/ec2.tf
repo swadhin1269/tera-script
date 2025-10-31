@@ -53,9 +53,22 @@ resource "aws_security_group" "ssh" {
 }
 
 # ---------- Key Pair ----------
+# Create a new RSA key locally in Terraform
+resource "tls_private_key" "example" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+# Use that key to create AWS Key Pair
 resource "aws_key_pair" "mykey" {
   key_name   = "my-keypair"
-  public_key = file("${pathexpand("~/.ssh/id_rsa.pub")}")
+  public_key = tls_private_key.example.public_key_openssh
+}
+
+# Save the private key locally (optional, for debugging or reuse)
+resource "local_file" "private_key_pem" {
+  content  = tls_private_key.example.private_key_pem
+  filename = "${path.module}/my-keypair.pem"
 }
 
 # ---------- EC2 Instance ----------
