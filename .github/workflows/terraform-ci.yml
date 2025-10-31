@@ -63,13 +63,8 @@ jobs:
           name: terraform-plan
           path: infra/tfplan
 
-      - name: Download Terraform plan
-        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
-        uses: actions/download-artifact@v4
-        with:
-          name: terraform-plan
-          path: infra
-
       - name: Terraform Apply (only on master)
         if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
-        run: terraform -chdir=infra apply -auto-approve tfplan
+        run: |
+          terraform -chdir=infra plan -out=tfplan
+          terraform -chdir=infra apply -auto-approve tfplan
