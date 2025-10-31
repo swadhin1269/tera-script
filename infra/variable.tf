@@ -3,25 +3,21 @@
 ###########################
 
 variable "aws_region" {
-  type    = string
-  default = "ap-south-1"
+  description = "AWS region for resource deployment"
+  type        = string
+  default     = "ap-south-1"
 }
 
 variable "bucket_name" {
-  type    = string
-  default = "buck2910251037"
+  description = "S3 bucket name (if needed for lambda or storage)"
+  type        = string
+  default     = "buck2910251037"
 }
 
 variable "instance_type" {
   description = "EC2 instance type"
   type        = string
   default     = "t3.micro"
-}
-
-variable "key_name" {
-  description = "Name of your existing EC2 key pair"
-  type        = string
-  default     = "my-keypair"
 }
 
 variable "my_ip_cidr" {
